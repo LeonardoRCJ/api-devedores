@@ -1,0 +1,45 @@
+datasource db {
+  provider = "sqlite" // troque para "postgresql" se quiser Supabase
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Tipo de transação
+// Cliente/Devedor
+model Client {
+  id         String   @id @default(uuid())
+  created_at DateTime @default(now())
+  name       String
+  cpf        String   @unique
+  phone      String
+
+  account Account?
+}
+
+// Conta do cliente
+model Account {
+  id         Int      @id @default(autoincrement())
+  balance    Decimal  @default(0.0)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  client    Client @relation(fields: [client_id], references: [id], onDelete: Cascade)
+  client_id String @unique
+
+  transactions Transaction[]
+}
+
+// Transação
+model Transaction {
+  id          String   @id @default(uuid())
+  created_at  DateTime @default(now())
+  amount      Decimal
+  description String?
+  type        String
+
+  account    Account @relation(fields: [account_id], references: [id], onDelete: Cascade)
+  account_id Int
+}
