@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ClientsService } from './clients.service';
+import { ClientNotFoundException } from 'src/exceptions/ClientNotFoundException';
 
 @Controller('clients')
 export class ClientsController {
-  constructor(private readonly clientsService: ClientsService){}
+  constructor(private readonly clientsService: ClientsService) {}
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -11,15 +12,14 @@ export class ClientsController {
   }
 
   @Post()
-  create(@Body() body: {name: string; cpf: string; phone: string}) {
+  create(@Body() body: { name: string; cpf: string; phone: string }) {
     return this.clientsService.create(body);
   }
 
   @Delete(':id')
-  async remove(@Param('id')id: string) {
+  async remove(@Param('id') id: string) {
     return this.clientsService.delete(id);
   }
-
 
   @Get()
   async findAllWithBalance() {

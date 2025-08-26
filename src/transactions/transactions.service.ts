@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient, type Transaction } from '@prisma/client';
+import { PrismaClient, Transaction } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 
 @Injectable()
@@ -39,7 +39,6 @@ export class TransactionsService {
       }
     })
   }
-
 
   async delete(id: string) {
     const transaction = await this.prisma.transaction.findUnique({
