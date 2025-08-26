@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { ClientNotFoundException } from 'src/exceptions/ClientNotFoundException';
+import type { Response } from 'express';
 
 @Controller('clients')
 export class ClientsController {
@@ -12,13 +13,16 @@ export class ClientsController {
   }
 
   @Post()
-  create(@Body() body: { name: string; cpf: string; phone: string }) {
-    return this.clientsService.create(body);
+  create(@Body() body: { name: string; cpf: string; phone: string }, @Res() res: Response) {
+    const client =  async() => await this.clientsService.create(body);
+    return res.status(HttpStatus.CREATED).json(client);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.clientsService.delete(id);
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    await this.clientsService.delete(id);
+
+    res.status(HttpStatus.NO_CONTENT).send();
   }
 
   @Get()
