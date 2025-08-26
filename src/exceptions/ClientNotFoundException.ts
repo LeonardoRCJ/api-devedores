@@ -2,11 +2,11 @@ import { HttpException, HttpStatus } from "@nestjs/common";
 
 
 export class ClientNotFoundException extends HttpException {
-  constructor() {
+  constructor(message: string) {
     super(
       {
         statusCode: HttpStatus.NOT_FOUND,
-        message: 'Cliente não foi encontrado',
+        message: message,
         error: 'ClientNotFound'
       },
       HttpStatus.NOT_FOUND
