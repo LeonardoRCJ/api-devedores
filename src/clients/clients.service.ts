@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import { ClientNotFoundException } from 'src/exceptions/ClientNotFoundException';
 import { json } from 'stream/consumers';
 import { Decimal } from '@prisma/client/runtime/library';
+import { CpfAlreadyExistsException } from 'src/exceptions/CpfAlreadyExistsException';
 
 @Injectable()
 export class ClientsService {
@@ -14,6 +15,12 @@ export class ClientsService {
     cpf: string;
     phone: string;
   }): Promise<Client> {
+      const existingCpf = await this.prisma.client.findUnique({where: {cpf: data.cpf} })
+
+      if (existingCpf) {
+        throw new CpfAlreadyExistsException(`CPF: ${data.cpf} já existe na aplicação, tente outro ou verifique na lista de devedores.`)
+      }
+      
     const client = await this.prisma.client.create({ data });
 
     await this.prisma.account.create({
