@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@ne
 import { ClientsService } from './clients.service';
 import { ClientNotFoundException } from 'src/exceptions/ClientNotFoundException';
 import type { Response } from 'express';
-
+  
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
@@ -13,9 +13,10 @@ export class ClientsController {
   }
 
   @Post()
-  create(@Body() body: { name: string; cpf: string; phone: string }, @Res() res: Response) {
-    const client =  async() => await this.clientsService.create(body);
-    return res.status(HttpStatus.CREATED).json(client);
+  async create(@Body() body: { name: string; cpf: string; phone: string }, @Res() res: Response) {
+
+    const client = await this.clientsService.create(body);
+    return res.status(HttpStatus.CREATED).send();
   }
 
   @Delete(':id')
